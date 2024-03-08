@@ -64,15 +64,18 @@ class PostService {
         throw new Error("No posts available");
       }
 
+      console.log("1");
+
       // populating the user details
       const postsWithUserDetails = await Promise.all(
         posts.map(async (post) => {
           try {
+            console.log("2");
             const userResponse = await axios.get(
               `${BASE_URL}/auth/user/${post.userId}`
             );
             const userDetails = userResponse.data.data;
-
+            console.log("3");
             // populating the likes array
 
             // const likesDetails = await Promise.all(
