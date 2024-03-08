@@ -61,6 +61,7 @@ class PostService {
     try {
       const posts = await PostModel.find().sort({ createdAt: -1 });
       if (!posts || posts.length === 0) {
+        console.log("No post available");
         throw new Error("No posts available");
       }
 
@@ -76,25 +77,6 @@ class PostService {
             );
             const userDetails = userResponse.data.data;
             console.log("3");
-            // populating the likes array
-
-            // const likesDetails = await Promise.all(
-            //   post.likes.map(async (likeUserId) => {
-            //     try {
-            //       const likeUserResponse = await axios.get(
-            //         `${BASE_URL}/auth/user/${likeUserId}`
-            //       );
-            //       return likeUserResponse.data.data;
-            //     } catch (likeUserError) {
-            //       console.error(
-            //         "Error fetching like user details:",
-            //         likeUserError
-            //       );
-            //       return null;
-            //     }
-            //   })
-            // );
-
             const postWithUserDetails = {
               ...post.toObject(),
               userId: userDetails,
@@ -102,12 +84,14 @@ class PostService {
             };
             return postWithUserDetails;
           } catch (userError) {
+            console.log(userError);
             return post;
           }
         })
       );
       return postsWithUserDetails;
     } catch (err) {
+      console.log(err);
       throw new Error(err.message);
     }
   }
