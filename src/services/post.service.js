@@ -25,9 +25,7 @@ class PostService {
 
   async imageUpload(payload) {
     try {
-      cloudinary.uploader.upload(payload, function (err, result) {
-        console.log(result);
-      });
+      cloudinary.uploader.upload(payload, function (err, result) {});
     } catch (err) {
       throw new Error(err.message);
     }
@@ -61,12 +59,8 @@ class PostService {
     try {
       const posts = await PostModel.find().sort({ createdAt: -1 });
       if (!posts || posts.length === 0) {
-        console.log("No post available");
         throw new Error("No posts available");
       }
-
-      console.log("1");
-
       // populating the user details
       const postsWithUserDetails = await Promise.all(
         posts.map(async (post) => {
@@ -96,13 +90,15 @@ class PostService {
     }
   }
 
-  async getPostbyId(postId) {
+  async getPostbyId(postId, toPopulate) {
     try {
       let post = await PostModel.findById(postId);
       if (!post) {
         throw new Error("Post not available");
       }
-      console.log(post.userId);
+      if (toPopulate && toPopulate === "false") {
+        return post;
+      }
       const userResponse = await axios.get(
         `${BASE_URL}/auth/user/${post.userId}`,
         { withCredentials: true }

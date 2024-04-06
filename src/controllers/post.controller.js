@@ -52,9 +52,10 @@ class PostController {
     }
   }
   async getPostbyId(req, res) {
-    const { postId } = req.query;
+    const { postId, toPopulate } = req.query;
+    console.log(toPopulate);
     try {
-      const posts = await PostService.getPostbyId(postId);
+      const posts = await PostService.getPostbyId(postId, toPopulate);
       res.status(200).json({
         success: true,
         data: posts,
