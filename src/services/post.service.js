@@ -65,12 +65,10 @@ class PostService {
       const postsWithUserDetails = await Promise.all(
         posts.map(async (post) => {
           try {
-            console.log("2");
             const userResponse = await axios.get(
               `${BASE_URL}/auth/user/${post.userId}`
             );
             const userDetails = userResponse.data.data;
-            console.log("3");
             const postWithUserDetails = {
               ...post.toObject(),
               userId: userDetails,
